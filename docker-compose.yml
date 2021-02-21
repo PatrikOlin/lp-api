@@ -14,9 +14,7 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: patrikolin/lp-api:latest
     depends_on:
       - db
     networks:

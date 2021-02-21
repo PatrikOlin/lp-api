@@ -19,7 +19,7 @@ func TestAuthzNoHeader(t *testing.T) {
 	router := gin.Default()
 	router.Use(Authz())
 
-	router.GET("/v1/user/profile", controllers.Profile)
+	router.GET("/v1/user/profile", controllers.GetProfile)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/v1/user/profile", nil)
@@ -32,7 +32,7 @@ func TestAuthzInvalidTokenFormat(t *testing.T) {
 	router := gin.Default()
 	router.Use(Authz())
 
-	router.GET("/v1/user/profile", controllers.Profile)
+	router.GET("/v1/user/profile", controllers.GetProfile)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/v1/user/profile", nil)
@@ -48,7 +48,7 @@ func TestAuthzInvalidToken(t *testing.T) {
 	router := gin.Default()
 	router.Use(Authz())
 
-	router.GET("/v1/user/profile", controllers.Profile)
+	router.GET("/v1/user/profile", controllers.GetProfile)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/v1/user/profile", nil)
@@ -92,7 +92,7 @@ func TestValidToken(t *testing.T) {
 	router := gin.Default()
 	router.Use(Authz())
 
-	router.GET("/v1/user/profile", controllers.Profile)
+	router.GET("/v1/user/profile", controllers.GetProfile)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/v1/user/profile", nil)

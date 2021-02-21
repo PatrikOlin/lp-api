@@ -10,13 +10,24 @@ import (
 
 type User struct {
 	gorm.Model
-	Name     string `json:"name"`
-	Email    string `json:"email" gorm:"unique"`
-	Password string `json:"password"`
+	Email    string   `json:"email" gorm:"unique"`
+	Password string   `json:"password"`
+	Profile  Profile  `json:"profile" gorm:"foreignkey:UserID"`
+	Pickups  []Pickup `json:"pickups" gorm:"foreignkey:UserID"`
+}
+
+type Profile struct {
+	gorm.Model
+	UserID   uint    `json:"userID"`
+	Name     string  `json:"name"`
+	Address  string  `json:"address"`
+	Recycler bool    `json:"recycler"`
+	Rating   float64 `json:"rating"`
+	Phone    string  `json:"phone"`
 }
 
 func (user *User) CreateUserRecord() error {
-	result := db.GlobalDB.Create(&user)
+	result := db.GlobalDB.Session(&gorm.Session{FullSaveAssociations: true}).Create(&user)
 	if result.Error != nil {
 		return result.Error
 	}

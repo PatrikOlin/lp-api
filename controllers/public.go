@@ -115,5 +115,7 @@ func Signup(c *gin.Context) {
 		c.Abort()
 	}
 
+	user.Password = ""
+
 	c.JSON(200, user)
 }

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/PatrikOlin/lp-api/db"
 	"github.com/PatrikOlin/lp-api/models"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -13,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestProfile(t *testing.T) {
+func TestGetProfile(t *testing.T) {
 	var profile models.User
 
 	err := db.InitDatabase()
@@ -33,7 +32,7 @@ func TestProfile(t *testing.T) {
 	err = user.CreateUserRecord()
 	assert.NoError(t, err)
 
-	request, err := http.NewRequest("GET", "/api/protected/profile", nil)
+	request, err := http.NewRequest("GET", "/api/protected/profiles/1", nil)
 	assert.NoError(t, err)
 
 	w := httptest.NewRecorder()
@@ -43,14 +42,12 @@ func TestProfile(t *testing.T) {
 
 	c.Set("email", "jwt@email.com")
 
-	Profile(c)
+	GetProfileById(c)
 
 	err = json.Unmarshal(w.Body.Bytes(), &profile)
 	assert.NoError(t, err)
 
 	assert.Equal(t, 200, w.Code)
-
-	log.Println(profile)
 
 	assert.Equal(t, user.Email, profile.Email)
 	assert.Equal(t, user.Name, profile.Name)
@@ -64,7 +61,7 @@ func TestProfileNotFound(t *testing.T) {
 
 	db.GlobalDB.AutoMigrate(&models.User{})
 
-	request, err := http.NewRequest("GET", "/api/protected/profile", nil)
+	request, err := http.NewRequest("GET", "/api/protected/profile/500", nil)
 	assert.NoError(t, err)
 
 	w := httptest.NewRecorder()
@@ -74,7 +71,7 @@ func TestProfileNotFound(t *testing.T) {
 
 	c.Set("email", "notfound@email.com")
 
-	Profile(c)
+	GetProfileById(c)
 
 	err = json.Unmarshal(w.Body.Bytes(), &profile)
 	assert.NoError(t, err)

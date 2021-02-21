@@ -1,8 +1,9 @@
 package middlewares
 
 import (
-	"github.com/PatrikOlin/lp-api/auth"
 	"strings"
+
+	"github.com/PatrikOlin/lp-api/auth"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,7 +22,7 @@ func Authz() gin.HandlerFunc {
 		if len(extractedToken) == 2 {
 			clientToken = strings.TrimSpace(extractedToken[1])
 		} else {
-			c.JSON(400, "Incorrect format of Authorization token")
+			c.JSON(400, "Incorrect Format of Authorization Token")
 			c.Abort()
 			return
 		}
@@ -41,5 +42,6 @@ func Authz() gin.HandlerFunc {
 		c.Set("email", claims.Email)
 
 		c.Next()
+
 	}
 }
