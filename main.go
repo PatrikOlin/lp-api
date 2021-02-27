@@ -26,28 +26,37 @@ func setupRouter() *gin.Engine {
 			public.POST("/signup", controllers.Signup)
 		}
 
-		user := v1.Group("/user").Use(middlewares.Authz())
+		user := v1.Group("/users").Use(middlewares.Authz())
 		{
-			user.GET("/profile", controllers.GetAllProfiles)
-			user.GET("/profile/:id", controllers.GetProfileByID)
-			user.GET("/pickup/:id", controllers.GetPickupsByUserID)
-			user.PUT("/profile", controllers.UpdateProfile)
+			user.GET("/profiles", controllers.GetAllProfiles)
+			user.GET("/profiles/:id", controllers.GetProfileByID)
+			user.GET("/pickups/:id", controllers.GetPickupsByUserID)
+			user.PUT("/profiles", controllers.UpdateProfile)
 			user.PUT("/recycler", controllers.ToggleRecycler)
 		}
 
-		haul := v1.Group("/haul").Use(middlewares.Authz())
+		haul := v1.Group("/hauls").Use(middlewares.Authz())
 		{
 			haul.GET("/", controllers.GetAllHauls)
 			haul.GET("/:id", controllers.GetHaulByID)
 		}
 
-		pickup := v1.Group("/pickup").Use(middlewares.Authz())
+		pickup := v1.Group("/pickups").Use(middlewares.Authz())
 		{
 			pickup.GET("/", controllers.GetAllPickups)
 			pickup.GET("/:id", controllers.GetPickupByID)
 			pickup.POST("/", controllers.CreatePickup)
 			pickup.PUT("/:id", controllers.UpdatePickupByID)
 			pickup.DELETE("/:id", controllers.DeletePickupByID)
+		}
+
+		propos := v1.Group("/propositions").Use(middlewares.Authz())
+		{
+			propos.GET("/", controllers.GetAllPropositions)
+			propos.GET("/:id", controllers.GetPropositionsByUserID)
+			propos.POST("/", controllers.CreateProposition)
+			propos.PUT("/:id", controllers.UpdatePropositionByID)
+			propos.DELETE("/:id", controllers.DeletePropositionByID)
 		}
 	}
 

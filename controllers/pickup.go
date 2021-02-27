@@ -13,7 +13,7 @@ import (
 func GetAllPickups(c *gin.Context) {
 	var pickups []models.Pickup
 
-	res := db.GlobalDB.Preload("Haul").Find(&pickups)
+	res := db.GlobalDB.Preload("Haul").Preload("Propositions").Find(&pickups)
 
 	if res.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -23,7 +23,9 @@ func GetAllPickups(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, pickups)
+	c.JSON(http.StatusOK, gin.H{
+		"data": pickups,
+	})
 
 	return
 }
@@ -33,7 +35,7 @@ func GetPickupByID(c *gin.Context) {
 
 	id := c.Params.ByName("id")
 
-	res := db.GlobalDB.Preload("Haul").Where("id = ?", id).First(&pickup)
+	res := db.GlobalDB.Preload("Haul").Preload("Propositions").Where("id = ?", id).First(&pickup)
 
 	if res.Error == gorm.ErrRecordNotFound {
 		c.JSON(http.StatusNotFound, gin.H{
@@ -59,11 +61,11 @@ func GetPickupByID(c *gin.Context) {
 }
 
 func GetPickupsByUserID(c *gin.Context) {
-	var pickup []models.Pickup
+	var pickups []models.Pickup
 
 	userID := c.Params.ByName("id")
 
-	res := db.GlobalDB.Debug().Preload("Haul").Where("user_id = ?", userID).Find(&pickup)
+	res := db.GlobalDB.Preload("Haul").Preload("Propositions").Where("user_id = ?", userID).Find(&pickups)
 
 	if res.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -74,7 +76,7 @@ func GetPickupsByUserID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": pickup,
+		"data": pickups,
 	})
 }
 

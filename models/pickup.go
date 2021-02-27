@@ -15,12 +15,12 @@ type Pickup struct {
 	Status          PickupStatus  `json:"status"`
 	PickupTimeStart time.Time     `json:"pickupTimeStart"`
 	PickupTimeEnd   time.Time     `json:"pickupTimeEnd"`
-	Haul            Haul          `json:"haul" gorm:"foreignKey:PickupID"`
+	Haul            Haul          `json:"haul"`
 	Propositions    []Proposition `json:"propositions"`
 }
 
 func (p *Pickup) CreatePickupRecord() error {
-	res := db.GlobalDB.Create(&p)
+	res := db.GlobalDB.Session(&gorm.Session{FullSaveAssociations: true}).Create(&p)
 	if res.Error != nil {
 		return res.Error
 	}

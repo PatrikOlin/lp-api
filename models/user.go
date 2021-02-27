@@ -10,10 +10,11 @@ import (
 
 type User struct {
 	gorm.Model
-	Email    string   `json:"email" gorm:"unique"`
-	Password string   `json:"password"`
-	Profile  Profile  `json:"profile" gorm:"foreignkey:UserID"`
-	Pickups  []Pickup `json:"pickups" gorm:"foreignkey:UserID"`
+	Email        string        `json:"email" gorm:"unique"`
+	Password     string        `json:"password"`
+	Profile      Profile       `json:"profile" gorm:"foreignKey:UserID"`
+	Pickups      []Pickup      `json:"pickups" gorm:"foreignKey:UserID"`
+	Propositions []Proposition `json:"propositions" gorm:"foreignKey:UserID"`
 }
 
 type Profile struct {
