@@ -39,6 +39,7 @@ func setupRouter() *gin.Engine {
 		{
 			haul.GET("/", controllers.GetAllHauls)
 			haul.GET("/:id", controllers.GetHaulByID)
+			haul.PUT("/:id", controllers.UpdateHaulByID)
 		}
 
 		pickup := v1.Group("/pickups").Use(middlewares.Authz())

@@ -154,5 +154,5 @@ func DeletePropositionByID(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": "proposition with id " + string(id) + " removed"})
+	c.JSON(http.StatusOK, gin.H{"data": "proposition with id " + string(id) + " removed."})
 }

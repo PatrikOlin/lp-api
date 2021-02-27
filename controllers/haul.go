@@ -53,3 +53,66 @@ func GetHaulByID(c *gin.Context) {
 
 	return
 }
+
+func UpdateHaulByID(c *gin.Context) {
+	var haul models.Haul
+	id := c.Params.ByName("id")
+
+	res := db.GlobalDB.Where("id = ?", id).First(&haul)
+
+	if res.Error == gorm.ErrRecordNotFound {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "haul not found",
+		})
+		c.Abort()
+		return
+	}
+
+	if res.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "could not get haul",
+		})
+		c.Abort()
+		return
+	}
+
+	if err := c.ShouldBindJSON(&haul); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		c.Abort()
+		return
+	}
+
+	db.GlobalDB.Save(&haul)
+
+	c.JSON(http.StatusOK, gin.H{"data": haul})
+
+	return
+}
+
+func DeleteHaulByID(c *gin.Context) {
+	var haul models.Haul
+
+	id := c.Params.ByName("id")
+
+	res := db.GlobalDB.Where("id = ?", id).Delete(&haul)
+
+	if res.Error == gorm.ErrRecordNotFound {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "haul not found",
+		})
+		c.Abort()
+		return
+	}
+
+	if res.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "could not remove haul",
+		})
+		c.Abort()
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": "haul with id " + string(id) + " removed."})
+}
